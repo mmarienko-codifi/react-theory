@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import classes from './App.module.scss';
 import Car from './Car/Car';
 
 class App extends Component {
@@ -43,19 +43,15 @@ class App extends Component {
   }
 
   render() {
-    const divStyle = {
-      textAlign: 'center'
-    };
-
     const cars = this.state.cars;
 
     return (
-      <div style={divStyle}>
+      <div className={classes.App}>
         <h1>{this.state.pageTitle}</h1>
 
         <button onClick={this.toggleCarsHandler}>Toggle cars</button>
   
-        { this.state.showCars && cars.map((car, i) => 
+        { this.state.showCars && <div style={{width: 400, margin: 'auto', paddingTop: 20}}> {cars.map((car, i) => 
             <Car 
              name={car.name}
              year={car.year} 
@@ -63,7 +59,7 @@ class App extends Component {
              onChangeName={event => {this.onChangeName(event.target.value, i)}}
              onDelete={this.deleteHandler.bind(this, i)}
             />
-          )
+          )} </div>
         }
       </div>
     );
