@@ -1,25 +1,34 @@
 import React, { Component } from 'react';
 import classes from './App.module.scss';
 import Car from './Car/Car';
+import Counter from './Counter/Counter';
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
+
+export const ClickedContext = React.createContext(false);
 
 class App extends Component {
-  state = {
-    cars: [
-      {
-        name: 'Ford',
-        year: 2018
-      },
-      {
-        name: 'Audi',
-        year: 2016
-      },
-      {
-        name: 'Mazda',
-        year: 2010
-      }
-    ],
-    pageTitle: 'React Components',
-    showCars: false
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      clicked: false,
+      cars: [
+        {
+          name: 'Ford',
+          year: 2018
+        },
+        {
+          name: 'Audi',
+          year: 2016
+        },
+        {
+          name: 'Mazda',
+          year: 2010
+        }
+      ],
+      pageTitle: 'React Components',
+      showCars: false
+    }
   }
 
   onChangeName(name, i) {
@@ -42,23 +51,44 @@ class App extends Component {
     this.setState({cars});
   }
 
+  // componentWillMount() {
+  //   console.log('App componentWillMount');
+  // }
+
+  componentDidMount() {
+    console.log('App componentDidMount');
+  }
+
   render() {
+    console.log('App render');
+    
     const cars = this.state.cars;
 
     return (
       <div className={classes.App}>
-        <h1>{this.state.pageTitle}</h1>
+        {/* <h1>{this.state.pageTitle}</h1> */}
+        <h1>{this.props.title}</h1>
 
-        <button onClick={this.toggleCarsHandler}>Toggle cars</button>
+        <ClickedContext.Provider value={this.state.clicked}>
+          <Counter />
+        </ClickedContext.Provider>
+
+        <br/>
+
+        <button style={{marginTop: 20}} onClick={this.toggleCarsHandler}>Toggle cars</button>
+
+        <button onClick={() => {this.setState({clicked: true})}}>Change clicked</button>
   
-        { this.state.showCars && <div style={{width: 400, margin: 'auto', paddingTop: 20}}> {cars.map((car, i) => 
-            <Car 
-             name={car.name}
-             year={car.year} 
-             key={i} 
-             onChangeName={event => {this.onChangeName(event.target.value, i)}}
-             onDelete={this.deleteHandler.bind(this, i)}
-            />
+        { this.state.showCars && <div style={{width: 400, margin: 'auto', paddingTop: 20}}> {cars.map((car, i) =>
+            <ErrorBoundary key={i}>
+              <Car 
+                name={car.name}
+                year={car.year} 
+                index={i}
+                onChangeName={event => {this.onChangeName(event.target.value, i)}}
+                onDelete={this.deleteHandler.bind(this, i)}
+              />
+            </ErrorBoundary>
           )} </div>
         }
       </div>

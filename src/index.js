@@ -6,6 +6,6 @@ import App from './App';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <App title="I'm from props!"/>
   </React.StrictMode>
 );
